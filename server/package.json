@@ -29,4 +29,3 @@
   }
 }
 
-npm i axios @react-native-async-storage/async-storage bcryptjs jsonwebtoken jwt-decode 
