@@ -30,6 +30,11 @@ router.post('/signup', async(req, res) => {
 })
 
 
+router.post('/signup', async (req, res) => {
+  
+})
+
+
 router.post('/login', async (req, res) => {
   // const { username, password } = req.body;
   // // Query the database for the user with the given username and password
@@ -79,8 +84,6 @@ router.post('/login', async (req, res) => {
         }
     });
 
-
-    const 
 
 
   // try {
