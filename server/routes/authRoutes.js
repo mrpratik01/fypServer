@@ -6,32 +6,65 @@ const jwt = require('jsonwebtoken')
 
 
 
-router.post('/signup', async(req, res) => {
+// router.post('/signup', async(req, res) => {
 
-  try {
-    const results = await db.query(
-      "INSERT INTO accounts ( user_id,username, password, email) values ( $1, $2, $3, $4) returning *",
-      [req.body.user_id, req.body.username, req.body.password, req.body.email]
-    );
-    console.log(results);
+//   try {
+//     const results = await db.query(
+//       "INSERT INTO accounts ( user_id,username, password, email) values ( $1, $2, $3, $4) returning *",
+//       [req.body.user_id, req.body.username, req.body.password, req.body.email]
+//     );
+//     console.log(results);
 
-    const token = jwt.sign({user_id:user._id},jwtKey)
-    res.send({token})
+//     const token = jwt.sign({user_id:user._id},jwtKey)
+//     res.send({token})
 
-    res.status(201).json({
-      status: "success",
-      data: {
-        packages: results.rows[0],
-      },
-    });
-  } catch (err) {
-    console.log(err);
-  }
-})
+//     res.status(201).json({
+//       status: "success",
+//       data: {
+//         packages: results.rows[0],
+//       },
+//     });
+//   } catch (err) {
+//     console.log(err);
+//   }
+// })
 
 
 router.post('/signup', async (req, res) => {
+
+  res.send('this is a  signup page')
+  const {username, password, email, phoneNumber }  = req.body;
+
+  if(!username || !password || !email || !phoneNumber){
+    return res.status(422).send({error: "please fill all the fields"})
+  }
+
+
+  async function userExists(email) {
+    const query = {
+      text: 'SELECT COUNT(*) FROM users WHERE email = $1',
+      values: [email],
+    };
   
+    const result = await db.query(query);
+    const count = parseInt(result.rows[0].count);
+  
+    return count > 0;
+  }
+
+  async function createUser(email, password) {
+    if (await userExists(email)) {
+      throw new Error('User already exists');
+    }
+  
+    // create user in database
+    const query = {
+      text: 'INSERT INTO users (email, password) VALUES ($1, $2)',
+      values: [email, password],
+    };
+  
+    await db.query(query);
+  }
 })
 
 
