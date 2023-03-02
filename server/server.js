@@ -18,7 +18,7 @@ app.use(express.json());
 
 // app.use('/api', authRoutes)
 
-app.use ('/api', authRoutes)
+app.use ('/api', packages)
 
 
 const port = 3001;
