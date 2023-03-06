@@ -128,17 +128,21 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    console.log(email,password)
     // check if user exists in database
-    const sqlQuery = 'SELECT * FROM accounts WHERE email = $1';
-    const result = await db.query(sqlQuery, [email]);
+    const sqlQuery = `SELECT * FROM accounts WHERE email = '${email}' `;
+    console.log(sqlQuery)
+    const result = await db.query(sqlQuery);
+    
 
-    if (result.rows.length === 0) {
-      res.status(401).json({ error: 'Invalid email or password' });
-      return;
-    }
-
+    if (!result) {
+      
+      return res.status(401).json({ error: 'Invalid emails or password' });
+      
+    }else{
     // verify password
-    const user = result.rows[0];
+    const user = result.data;
+    console.log(user)
     const passwordMatches = await bcrypt.compare(password, user.password);
 
     if (!passwordMatches) {
@@ -152,6 +156,9 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign(username,);
 
     res.json({ token });
+
+    }
+
   } catch (err) {
     console.error('Error logging in', err);
     res.status(500).json({ error: 'Internal server error' });
