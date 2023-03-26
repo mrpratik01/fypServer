@@ -4,11 +4,12 @@ const db = require("../server/db/index");
 const morgan = require("morgan");
 const { password } = require("pg/lib/defaults");
 const app = express();
-
+// const cors = require('cors');
 const authRoutes = require('./routes/authRoutes')
 const packages = require('./routes/packages')
 const payment = require('./routes/payment')
 const wallet = require('./routes/wallet')
+const addressinfo = require('./routes/addressInfo')
 
 app.use(bodyParser.json())
 app.use(authRoutes)
@@ -21,6 +22,10 @@ app.use(express.json());
 // app.use('/api', authRoutes)
 
 app.use ('/api', authRoutes)
+app.use('/api', addressinfo)
+
+
+// app.use(cors());
 
 
 const port = 3001;

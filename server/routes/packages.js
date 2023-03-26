@@ -67,6 +67,8 @@ router.post("/packages", async (req, res) => {
   }
 });
 
+
+
 // UPDATE accounts SET username = 'hash', password = "hashh", email = "emaill", where user_id = 5;
 
 //update packages
