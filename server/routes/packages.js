@@ -7,8 +7,11 @@ const {jwtkey} = require('../keys')
 const jwt = require('jsonwebtoken')
 
 
+
+
+
 router.get("/packages", async (req, res) => {
-  try {
+  try { 
     const results = await db.query("select * from packages");
     console.log(results);
     res.status(200).json({
@@ -23,24 +26,38 @@ router.get("/packages", async (req, res) => {
   }
 });
 
+router.get("/accounts", async (req, res) => {
+  try { 
+    const results = await db.query("select id, username, email, phoneNumber from accounts");
+    console.log(results);
+    res.status(201).json({
+      status: "success",
+      result: results.rows
+     
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 //get a package
 router.get("/packages/:id", async (req, res) => {
   console.log(req.params.id);
 
   try {
     const results = await db.query(
-      `select * from packages where package_id = ${req.params.id}`
+      `select * from packages where user_id = ${req.params.id}`
     );
     console.log(results.rows[0]);
+    res.status(201).json({
+      status: "success",
+      result: results.rows
+     
+    });
   } catch (err) {
     console.log(err);
   }
-  res.status(201).json({
-    status: "success",
-    data: {
-      packages: "cotton",
-    },
-  });
+  
 });
 
 //create a packages
@@ -51,7 +68,7 @@ router.post("/packages", async (req, res) => {
 
   try {
     const results = await db.query(
-      "INSERT INTO packages ( packageDescription, pickup_address, dropoff_address, package_Category, weight) values ( $1, $2, $3, $4, $5) returning *",
+      "INSERT INTO packages ( packageDescription, pickup_address, dropoff_address, package_Category, weight, user_id) values ( $1, $2, $3, $4, $5, 44) returning *",
       [req.body.packageDescription, req.body.pickup_Address, req.body.dropoff_address, req.body.package_Category, req.body.weight]
     );
     console.log(results);
@@ -67,7 +84,53 @@ router.post("/packages", async (req, res) => {
   }
 });
 
+router.post("/inserting-package-details", async (req, res) => {
 
+  console.log(req.body);
+
+  // try {
+  //   const results = await db.query(
+  //     "INSERT INTO packages ( packageDescription, pickup_address, dropoff_address, package_Category, weight, user_id) values ( $1, $2, $3, $4, $5, 44) returning *",
+  //     [req.body.packageDescription, req.body.pickup_Address, req.body.dropoff_address, req.body.package_Category, req.body.weight]
+  //   );
+  //   console.log(results);
+
+  //   res.status(201).json({
+  //     status: "success",
+  //     data: {
+  //       packages: results.rows[0],
+  //     }, 
+  //   });
+  // } catch (err) {
+  //   console.log(err);
+  // } 
+
+});
+
+
+
+
+router.post("/create-packages", async (req, res) => {
+
+  console.log(req.body);
+
+  try {
+    const results = await db.query(
+      "INSERT INTO packages ( packageDescription, pickup_address, dropoff_address, package_Category, weight, user_id) values ( $1, $2, $3, $4, $5, 44) returning *",
+      [req.body.packageDescription, req.body.pickup_Address, req.body.dropoff_address, req.body.package_Category, req.body.weight]
+    );
+    console.log(results);
+
+    res.status(201).json({
+      status: "success",
+      data: {
+        packages: results.rows[0],
+      }, 
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
 
 // UPDATE accounts SET username = 'hash', password = "hashh", email = "emaill", where user_id = 5;
 
