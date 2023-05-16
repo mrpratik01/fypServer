@@ -11,6 +11,7 @@ const payment = require('./routes/payment')
 const wallet = require('./routes/wallet')
 const addressinfo = require('./routes/addressInfo')
 const vehicle = require('./routes/vehicle')
+const orderSummary = require('./routes/orderSummary')
 
 app.use(bodyParser.json())
 app.use(authRoutes)
@@ -26,6 +27,7 @@ app.use ('/api', authRoutes)
 app.use('/api', addressinfo)
 app.use('/api', packages)
 app.use('/api', vehicle)
+app.use('/api', orderSummary)
 
 // app.use(cors());
 

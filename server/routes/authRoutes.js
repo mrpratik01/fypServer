@@ -194,30 +194,21 @@ router.post("/login", async (req, res) => {
 
   try {
     console.log(email, password);
-    // check if user exists in database
-  
+
     const result = await db.query('SELECT * FROM accounts WHERE email = $1', [email]);
     console.log(result)
     if (!result) {
       return res.status(401).json({ error: "Invalid emails or password" });
     } else {
-      // verify password
       const user = result.rows[0];
-
- 
       const passwordMatches = await bcrypt.compare(password, user.password);
       console.log(passwordMatches);
-
       if (!passwordMatches) {
         res.status(401).json({ error: "Invalid email or password" });
         return;
       }
-
       const username = { name: email };
-
-      // generate JWT token
       const token = jwt.sign(username, "secretKey");
-
       res.json({token});
     }
   } catch (err) {

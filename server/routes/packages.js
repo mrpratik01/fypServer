@@ -16,10 +16,8 @@ router.get("/packages", async (req, res) => {
     console.log(results);
     res.status(200).json({
       status: "success",
-      results: results.rows.length,
-      data: {
-        packages: results.rows,
-      },
+      result: results.rows
+      
     });
   } catch (err) {
     console.log(err);
@@ -60,16 +58,29 @@ router.get("/packages/:id", async (req, res) => {
   
 });
 
-//create a packages
 
-router.post("/packages", async (req, res) => {
 
-  console.log(req.body);
 
+router.post("/inserting-package-details", async (req, res) => {
+
+
+
+  const totalAMT = (req.body.totalKM * req.body.weight)
+
+
+  // const totalAMT1 = (totalKM,weight) => {
+
+  //   const myFinalValue = (totalKM / weight) * 100;
+  //   return myFinalValue;
+
+  // }
+
+
+ 
   try {
     const results = await db.query(
-      "INSERT INTO packages ( packageDescription, pickup_address, dropoff_address, package_Category, weight, user_id) values ( $1, $2, $3, $4, $5, 44) returning *",
-      [req.body.packageDescription, req.body.pickup_Address, req.body.dropoff_address, req.body.package_Category, req.body.weight]
+      "INSERT INTO packages ( packageDescription, pickup_address, dropoff_address, package_category, weight, user_id, amount, totalkm) values ( $1, $2, $3, $4, $5, 44, $6) returning *",
+      [req.body.packageDescription, req.body.pickup_address, req.body.dropoff_address, req.body.package_category, req.body.weight, totalAMT]
     );
     console.log(results);
 
@@ -81,43 +92,26 @@ router.post("/packages", async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-  }
-});
+  } 
 
-router.post("/inserting-package-details", async (req, res) => {
 
-  console.log(req.body);
-
-  // try {
-  //   const results = await db.query(
-  //     "INSERT INTO packages ( packageDescription, pickup_address, dropoff_address, package_Category, weight, user_id) values ( $1, $2, $3, $4, $5, 44) returning *",
-  //     [req.body.packageDescription, req.body.pickup_Address, req.body.dropoff_address, req.body.package_Category, req.body.weight]
-  //   );
-  //   console.log(results);
-
-  //   res.status(201).json({
-  //     status: "success",
-  //     data: {
-  //       packages: results.rows[0],
-  //     }, 
-  //   });
-  // } catch (err) {
-  //   console.log(err);
-  // } 
 
 });
+
+
 
 
 
 
 router.post("/create-packages", async (req, res) => {
 
-  console.log(req.body);
+  const totalAMT = (req.body.kilometer * req.body.weight)
+  console.log(totalAMT)
 
   try {
     const results = await db.query(
-      "INSERT INTO packages ( packageDescription, pickup_address, dropoff_address, package_Category, weight, user_id) values ( $1, $2, $3, $4, $5, 44) returning *",
-      [req.body.packageDescription, req.body.pickup_Address, req.body.dropoff_address, req.body.package_Category, req.body.weight]
+      "INSERT INTO packages ( packageDescription, pickup_address, dropoff_address, package_category, weight, user_id, amount, totalkm) values ( $1, $2, $3, $4, $5, $6, $7, $8) returning *",
+      [req.body.packageDescription, req.body.pickup_address, req.body.dropoff_address, req.body.package_category, req.body.weight, req.body.user_id, totalAMT, req.body.kilometer]
     );
     console.log(results);
 
